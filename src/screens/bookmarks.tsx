@@ -1,11 +1,11 @@
-import {useCallback, useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {FlashList} from '@shopify/flash-list';
 
 import {useBookmarkStore, UserAction, userUserAction} from '../store';
-import {ScreenContainer} from '../components/screenContainer';
-import {BookmarkItem} from '../components/Card/BookmarkItem';
+import {ScreenContainer} from '../components/ScreenContainer';
+import {BookmarkItem} from '../components/card/BookmarkItem';
 import {BookmarksUserActions} from '../components/BookmarksUserActions';
-import {EmptyList} from '../components/emptyList';
+import {EmptyList} from '../components/EmptyList';
 
 export const BookmarksScreen = () => {
   const [userInput, setUserInput] = useState<string>('');

@@ -1,5 +1,4 @@
 import Svg, {Line, Polyline} from 'react-native-svg';
-import {View} from 'react-native';
 
 export const ArrowForward = ({
   width = 24,
@@ -7,18 +6,16 @@ export const ArrowForward = ({
   stroke = 'currentColor',
   strokeWidth = 24,
 }) => (
-  <View>
-    <Svg
-      width={width}
-      height={height}
-      viewBox={'0 0 24 24'}
-      fill="none"
-      stroke={stroke}
-      stroke-width={strokeWidth}
-      stroke-linecap="round"
-      stroke-linejoin="round">
-      <Line x1="5" y1="12" x2="19" y2="12" />
-      <Polyline points="12 5 19 12 12 19" />
-    </Svg>
-  </View>
+  <Svg
+    width={width}
+    height={height}
+    viewBox={'0 0 24 24'}
+    fill="none"
+    stroke={stroke}
+    stroke-width={strokeWidth}
+    stroke-linecap="round"
+    stroke-linejoin="round">
+    <Line x1="5" y1="12" x2="19" y2="12" />
+    <Polyline points="12 5 19 12 12 19" />
+  </Svg>
 );

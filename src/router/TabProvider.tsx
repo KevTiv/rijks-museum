@@ -1,3 +1,4 @@
+import {useCallback} from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
 import {MuseumStackNavigation} from './StackProvidder';
@@ -6,14 +7,26 @@ import {RootTabNavigationParams} from './route.types';
 import {ROUTES} from './routes';
 import {Museum} from '../components/icons';
 import {Bookmark} from '../components/icons/bookmark';
-import {appTheme} from '../theme';
+import {BackButton} from '../components/BackButton';
+import {ToggleThemeButton} from '../components/ToggleTheme.tsx';
+import {useTheme} from '../store';
 
 const Tab = createBottomTabNavigator<RootTabNavigationParams>();
 
 export const TabNavigator = () => {
+  const {theme} = useTheme();
+  const handleFill = useCallback(
+    (focused: boolean) =>
+      focused ? theme.colors.icons.selected : theme.colors.icons.unselected,
+    [theme.colors.icons.selected, theme.colors.icons.unselected],
+  );
+
   return (
-    <NavigationContainer theme={appTheme}>
-      <Tab.Navigator initialRouteName={ROUTES.MUSEUM}>
+    <NavigationContainer theme={theme}>
+      <Tab.Navigator
+        backBehavior="history"
+        initialRouteName={ROUTES.MUSEUM}
+        screenOptions={{headerLeft: BackButton}}>
         <Tab.Screen
           name={ROUTES.MUSEUM}
           component={MuseumStackNavigation}
@@ -24,11 +37,7 @@ export const TabNavigator = () => {
                 stroke={color}
                 width={size}
                 height={size}
-                fill={
-                  focused
-                    ? 'rgba(255, 255, 255, 1)'
-                    : 'rgba(255, 255, 255, 0.7)'
-                }
+                fill={handleFill(focused)}
               />
             ),
           }}
@@ -42,13 +51,11 @@ export const TabNavigator = () => {
                 stroke={color}
                 width={size}
                 height={size}
-                fill={
-                  focused
-                    ? 'rgba(255, 255, 255, 1)'
-                    : 'rgba(255, 255, 255, 0.7)'
-                }
+                fill={handleFill(focused)}
               />
             ),
+            headerLeft: undefined,
+            headerRight: ToggleThemeButton,
           }}
         />
       </Tab.Navigator>

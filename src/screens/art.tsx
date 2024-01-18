@@ -1,16 +1,19 @@
-import {useCallback} from 'react';
+import React, {useCallback} from 'react';
 import {StyleSheet, ScrollView} from 'react-native';
-import {ScreenContainer} from '../components/screenContainer';
+import {ScreenContainer} from '../components/ScreenContainer.tsx';
 import FastImage from 'react-native-fast-image';
+import {AnimatePresence, SafeAreaView} from 'moti';
 import {useAppNavigation, useAppRoute} from '../hooks/appNavigation';
 import {ROUTES} from '../router/routes';
 import {useQuery} from '@tanstack/react-query';
 import {getRijksArtCollection} from '../api/rijksMuseum';
-import {appTheme} from '../theme';
-import {useBookmarkStore} from '../store';
-import {Loading} from '../components/loading';
+import {useBookmarkStore, useTheme} from '../store';
+import {Loading} from '../components/Loading';
 import {useDownloadImage} from '../hooks/downloadImage';
-import {ArtDetails} from '../components/Card/ArtDetails.tsx';
+import {ArtDetails} from '../components/card/ArtDetails';
+import {PinkNoiseContainer} from '../components/shader/PinkNoiseContainer';
+import {GestureContainer} from '../components/GestureContainer';
+import {BackButton} from '../components/BackButton';
 
 export const ArtScreen = () => {
   const router = useAppNavigation();
@@ -46,40 +49,54 @@ export const ArtScreen = () => {
     [getBookmarkById, params.id, params.webImage?.url],
   );
 
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
-    <ScreenContainer>
-      <ScrollView>
-        <FastImage
-          style={styles.imgContainer}
-          source={{uri: params?.webImage?.url}}
-          resizeMode={FastImage.resizeMode.cover}
-        />
-        <Loading isLoading={isLoading} />
-        <ArtDetails
-          router={router}
-          params={params}
-          artPiece={artPiece}
-          getBookmarkById={getBookmarkById}
-          getIsImgSavedInGallery={getIsImgSavedInGallery}
-          bookmarkStatus={bookmarkStatus}
-          handleBookmarkStatusClick={handleBookmarkStatusClick}
-          handleDownloadImage={handleDownloadImage}
-        />
-      </ScrollView>
-    </ScreenContainer>
+    <SafeAreaView style={styles.container}>
+      <ScreenContainer>
+        <BackButton />
+        <ScrollView>
+          <PinkNoiseContainer height={366}>
+            <GestureContainer height={350}>
+              <FastImage
+                style={styles.imgContainer}
+                source={{uri: params?.webImage?.url}}
+                resizeMode={FastImage.resizeMode.cover}
+              />
+            </GestureContainer>
+          </PinkNoiseContainer>
+          <AnimatePresence>
+            <ArtDetails
+              router={router}
+              params={params}
+              artPiece={artPiece}
+              getBookmarkById={getBookmarkById}
+              getIsImgSavedInGallery={getIsImgSavedInGallery}
+              bookmarkStatus={bookmarkStatus}
+              handleBookmarkStatusClick={handleBookmarkStatusClick}
+              handleDownloadImage={handleDownloadImage}
+            />
+          </AnimatePresence>
+        </ScrollView>
+      </ScreenContainer>
+    </SafeAreaView>
   );
 };
 
+const theme = useTheme.getState().theme;
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     width: '100%',
     display: 'flex',
-    marginVertical: 4,
+    marginVertical: theme.sizes.sm,
   },
   imgContainer: {
     width: '100%',
     height: 350,
-    borderRadius: 8,
+    borderRadius: theme.sizes.md,
     opacity: 0.9,
   },
 });

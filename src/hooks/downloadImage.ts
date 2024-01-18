@@ -13,9 +13,21 @@ const {DownloadRijksArtImage} = NativeModules as {
 
 const isIOS = Platform.OS === 'ios';
 
+/**
+ * Hook to download an image using the native iOS APIs.
+ *
+ * @returns ImageDownloader
+ */
 export function useDownloadImage() {
   const {getBookmarkById, updateBookmarks} = useBookmarkStore();
 
+  /**
+   * Downloads an image using the native iOS or Android APIs.
+   *
+   * @param {string} id - The ID of the bookmark to update.
+   * @param {string} url - The URL of the image to download.
+   * @returns {Promise<void>}
+   */
   const handleDownloadImage = useCallback(
     async (id: string, url: string) => {
       try {
@@ -36,6 +48,7 @@ export function useDownloadImage() {
           );
         }
       } catch (error) {
+        console.log(error);
         return Promise.reject(error);
       }
     },

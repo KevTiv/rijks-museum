@@ -1,88 +1,88 @@
 import React from 'react';
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import {userUserAction, UserAction} from '../store';
+import {StyleSheet, TextInput, TouchableOpacity} from 'react-native';
+import {userUserAction, UserAction, useTheme} from '../store';
+import {MotiView as Box, MotiText as Text, AnimatePresence} from 'moti';
 
 type BookmarksUserActionsProps = {
   handleAction: (action: UserAction) => void;
   userInput?: string;
   setUserInput: React.Dispatch<React.SetStateAction<string>>;
 };
+const USER_ACTIONS: UserAction[] = ['manage', 'search'];
 export const BookmarksUserActions = ({
   handleAction,
   userInput,
   setUserInput,
 }: BookmarksUserActionsProps) => {
+  const {theme} = useTheme();
   const {getCurrentAction} = userUserAction();
 
   return (
     <>
-      <View style={styles.container}>
-        <TouchableOpacity
-          onPress={() => handleAction('manage')}
-          style={[
-            styles.action,
-            styles.unselectedAction,
-            getCurrentAction() === 'manage' && styles.selectedAction,
-          ]}>
-          <Text>Manage</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => handleAction('search')}
-          style={[
-            styles.action,
-            styles.unselectedAction,
-            getCurrentAction() === 'search' && styles.selectedAction,
-          ]}>
-          <Text>Search</Text>
-        </TouchableOpacity>
-      </View>
+      <Box style={styles.container}>
+        {USER_ACTIONS.map(action => (
+          <TouchableOpacity
+            key={action}
+            onPress={() => handleAction(action)}
+            style={[
+              styles.action,
+              styles.unselectedAction,
+              getCurrentAction() === action && styles.selectedAction,
+            ]}>
+            <Text style={[styles.title, {color: theme.colors.text}]}>
+              {action}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </Box>
       {getCurrentAction() === 'search' && (
-        <TextInput
-          style={styles.input}
-          value={userInput}
-          onChangeText={setUserInput}
-          placeholder={'Search Artist...'}
-          placeholderTextColor={'white'}
-        />
+        <AnimatePresence>
+          <TextInput
+            style={[
+              styles.input,
+              {borderColor: theme.colors.border, color: theme.colors.text},
+            ]}
+            value={userInput}
+            onChangeText={setUserInput}
+            placeholder={'Search Artist...'}
+            placeholderTextColor={theme.colors.primary}
+          />
+        </AnimatePresence>
       )}
     </>
   );
 };
 
+const theme = useTheme.getState().theme;
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginVertical: 8,
-    paddingVertical: 4,
+    marginVertical: theme.sizes.md,
+    paddingVertical: theme.sizes.sm,
+  },
+  title: {
+    fontSize: theme.sizes.lg,
+    fontWeight: '700',
+    color: theme.colors.text,
   },
   action: {
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 8,
-    borderRadius: 8,
+    padding: theme.sizes.md,
+    borderRadius: theme.sizes.md,
   },
   unselectedAction: {
     opacity: 0.4,
-    backgroundColor: 'white',
   },
   selectedAction: {
     opacity: 1,
-    backgroundColor: 'white',
   },
   input: {
-    marginVertical: 8,
-    paddingHorizontal: 4,
-    borderRadius: 8,
-    borderColor: 'white',
-    color: 'white',
+    marginVertical: theme.sizes.md,
+    paddingHorizontal: theme.sizes.sm,
+    borderRadius: theme.sizes.md,
     borderWidth: 1,
-    height: 40,
+    height: theme.sizes['3xl'],
   },
 });

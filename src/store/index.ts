@@ -2,6 +2,7 @@ import {create, StateCreator} from 'zustand';
 import {createJSONStorage, persist} from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {ArtObject} from '../api/types';
+import {appLightTheme, appTheme} from '../theme';
 
 export type BookmarkedArtObject = {
   bookmarks: ArtObject[];
@@ -18,6 +19,23 @@ type BookmarkUserAction = {
   getCurrentAction: () => UserAction;
   setCurrentAction: (action: UserAction) => void;
 };
+
+type themeProperties = typeof appTheme;
+export type ThemeSlice = {
+  colorSchemeName: 'light' | 'dark';
+  theme: themeProperties;
+  toggleTheme: () => void;
+};
+
+const createThemeStore: StateCreator<ThemeSlice> = set => ({
+  colorSchemeName: 'dark',
+  theme: appTheme,
+  toggleTheme: () =>
+    set(state => ({
+      theme: state.theme === appTheme ? appLightTheme : appTheme,
+      colorSchemeName: state.theme === appTheme ? 'light' : 'dark',
+    })),
+});
 
 export const createBookmarkedArtObjectSlice: StateCreator<
   BookmarkedArtObject
@@ -54,6 +72,14 @@ const createUserBookMarksAction: StateCreator<BookmarkUserAction> = (
   getCurrentAction: () => get().action,
   setCurrentAction: action => set({action}),
 });
+
+export const useTheme = create(
+  persist(createThemeStore, {
+    name: 'theme', // unique name for persisting the state
+    // include other persist configuration if needed
+    storage: createJSONStorage(() => AsyncStorage),
+  }),
+);
 
 export const useBookmarkStore = create(
   persist(createBookmarkedArtObjectSlice, {
