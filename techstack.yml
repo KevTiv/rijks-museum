@@ -2,7 +2,7 @@ repo_name: KevTiv/rijks-museum
 report_id: dc7a232032d83487020ded31414813ca
 version: 0.1
 repo_type: Public
-timestamp: '2024-01-20T17:11:38+00:00'
+timestamp: '2024-02-29T19:31:34+00:00'
 requested_by: KevTiv
 provider: github
 branch: main
@@ -55,7 +55,7 @@ tools:
   last_updated_by: Kevin Tivert
   last_updated_on: 2023-12-16 22:15:09.000000000 Z
 - name: Swift
-  description: 'An innovative new programming language for Cocoa and Cocoa Touch. '
+  description: An innovative new programming language for Cocoa and Cocoa Touch.
   website_url: https://developer.apple.com/swift/
   license: Apache-2.0
   open_source: true
@@ -208,7 +208,7 @@ tools:
   last_updated_by: Kevin Tivert
   last_updated_on: 2023-12-16 22:15:09.000000000 Z
 - name: Prettier
-  description: 'Prettier is an opinionated code formatter. '
+  description: Prettier is an opinionated code formatter.
   website_url: https://prettier.io/
   version: 2.8.8
   license: MIT
